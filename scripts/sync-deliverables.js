@@ -11,7 +11,7 @@ const mode = [...args][0] || "all";
 const paths = {
   webSource: path.join(projectRoot, "cpanel", "gift-converter"),
   webDest: path.join(projectRoot, "GIFt-Converter", "web"),
-  portableSource: path.join(projectRoot, "release", "win-unpacked"),
+  portableSource: path.join(projectRoot, "release", "portable-build", "gift-converter-win32-x64"),
   portableDest: path.join(projectRoot, "GIFt-Converter", "windows app"),
   setupSource: path.join(projectRoot, "release", `gift-converter-${version}.exe`),
   setupDestDir: path.join(projectRoot, "GIFt-Converter", "itch build"),

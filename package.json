@@ -12,8 +12,9 @@
     "sync:setup": "node scripts/sync-deliverables.js setup",
     "sync:metadata": "node scripts/sync-deliverables.js metadata",
     "dist:win": "npm.cmd run build:icon && electron-builder --win portable",
+    "dist:windows-app": "npm.cmd run build:icon && node node_modules/electron-packager/bin/electron-packager.js . gift-converter --platform=win32 --arch=x64 --overwrite --out=release/portable-build --icon=assets/icon.ico --asar",
     "dist:setup": "npm.cmd run build:icon && electron-builder --win nsis --x64",
-    "package:all": "npm.cmd run sync:metadata && npm.cmd run build:web && npm.cmd run dist:win && npm.cmd run sync:portable && npm.cmd run dist:setup && npm.cmd run sync:setup && npm.cmd run build:web"
+    "package:all": "npm.cmd run sync:metadata && npm.cmd run build:web && npm.cmd run dist:windows-app && npm.cmd run sync:portable && npm.cmd run dist:win && npm.cmd run dist:setup && npm.cmd run sync:setup && npm.cmd run build:web"
   },
   "keywords": [
     "electron",
