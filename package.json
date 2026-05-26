@@ -7,8 +7,13 @@
   "scripts": {
     "start": "electron .",
     "build:icon": "node scripts/build-icon.js",
+    "build:web": "node scripts/sync-deliverables.js web",
+    "sync:portable": "node scripts/sync-deliverables.js portable",
+    "sync:setup": "node scripts/sync-deliverables.js setup",
+    "sync:metadata": "node scripts/sync-deliverables.js metadata",
     "dist:win": "npm.cmd run build:icon && electron-builder --win portable",
-    "dist:setup": "npm.cmd run build:icon && electron-builder --win nsis --x64"
+    "dist:setup": "npm.cmd run build:icon && electron-builder --win nsis --x64",
+    "package:all": "npm.cmd run sync:metadata && npm.cmd run build:web && npm.cmd run dist:win && npm.cmd run sync:portable && npm.cmd run dist:setup && npm.cmd run sync:setup && npm.cmd run build:web"
   },
   "keywords": [
     "electron",

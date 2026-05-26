@@ -15,6 +15,17 @@ const crypto = require("crypto");
 const { spawn } = require("child_process");
 const { pathToFileURL } = require("url");
 const ffmpegStaticPath = require("ffmpeg-static");
+const JSZip = require("jszip");
+const APP_MANIFEST_PATH = path.join(__dirname, "app.manifest.json");
+const REQUIRED_MANIFEST_FIELDS = [
+  "id",
+  "name",
+  "version",
+  "shortDescription",
+  "aiDescription",
+  "github",
+  "releaseApiUrl"
+];
 
 const VIDEO_EXTENSIONS = new Set([
   ".mp4",
@@ -49,6 +60,29 @@ let cancelRequested = false;
 let isQuitting = false;
 
 app.setName("gift-converter");
+
+function validateAppManifest() {
+  if (app.isPackaged) {
+    return;
+  }
+
+  try {
+    const raw = fs.readFileSync(APP_MANIFEST_PATH, "utf8");
+    const manifest = JSON.parse(raw);
+    const missing = REQUIRED_MANIFEST_FIELDS.filter((field) => {
+      const value = manifest[field];
+      return value === undefined || value === null || value === "";
+    });
+
+    if (missing.length > 0) {
+      console.warn(
+        `[app.manifest] Missing required fields: ${missing.join(", ")}`
+      );
+    }
+  } catch (error) {
+    console.warn(`[app.manifest] Validation skipped: ${error.message}`);
+  }
+}
 
 function getAppIconPath() {
   return path.join(__dirname, "assets", "icon.ico");
@@ -221,7 +255,10 @@ async function selectOutputFolder() {
 }
 
 async function pickZipDestination(outputDir) {
-  const defaultPath = path.join(outputDir || app.getPath("documents"), "gif-export.zip");
+  const defaultPath = path.join(
+    outputDir || app.getPath("documents"),
+    "gift-converter-export.zip"
+  );
   const result = await dialog.showSaveDialog(mainWindow, {
     title: "Save ZIP File",
     defaultPath,
@@ -355,54 +392,78 @@ function getFileEntries(filePaths = []) {
     }));
 }
 
-function escapePowerShellLiteral(value) {
-  return String(value).replace(/'/g, "''");
+function buildArchiveEntries(files = []) {
+  const usedNames = new Set();
+
+  return files
+    .filter((filePath) => filePath && fs.existsSync(filePath))
+    .map((filePath, index) => {
+      const parsed = path.parse(filePath);
+      let archiveName = parsed.base;
+
+      if (usedNames.has(archiveName.toLowerCase())) {
+        archiveName = `${String(index + 1).padStart(3, "0")}-${parsed.base}`;
+      }
+
+      while (usedNames.has(archiveName.toLowerCase())) {
+        archiveName = `${String(index + 1).padStart(3, "0")}-${archiveName}`;
+      }
+
+      usedNames.add(archiveName.toLowerCase());
+      return { filePath, archiveName };
+    });
 }
 
 function createZipArchive(files, destinationZip) {
   return new Promise((resolve, reject) => {
-    if (!files || files.length === 0) {
+    const archiveEntries = buildArchiveEntries(files);
+    if (archiveEntries.length === 0) {
       resolve(null);
       return;
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "bulk-gif-zip-"));
-    const stagingDir = path.join(tempDir, "items");
-    fs.mkdirSync(stagingDir, { recursive: true });
+    fs.mkdirSync(path.dirname(destinationZip), { recursive: true });
 
-    files.forEach((filePath, index) => {
-      const parsed = path.parse(filePath);
-      const stagedName = `${String(index + 1).padStart(3, "0")}-${parsed.base}`;
-      fs.copyFileSync(filePath, path.join(stagingDir, stagedName));
+    const zip = new JSZip();
+    archiveEntries.forEach(({ filePath, archiveName }) => {
+      zip.file(archiveName, fs.createReadStream(filePath), {
+        binary: true,
+        createFolders: false
+      });
     });
 
-    const sourceLiteral = escapePowerShellLiteral(path.join(stagingDir, "*"));
-    const destinationLiteral = escapePowerShellLiteral(destinationZip);
-    const command = `Compress-Archive -Path '${sourceLiteral}' -DestinationPath '${destinationLiteral}' -Force`;
-    const child = spawn("powershell.exe", ["-NoProfile", "-Command", command], {
-      windowsHide: true
+    const output = fs.createWriteStream(destinationZip);
+    const zipStream = zip.generateNodeStream({
+      type: "nodebuffer",
+      streamFiles: true,
+      compression: "STORE"
     });
 
-    let stderr = "";
-    child.stderr.on("data", (chunk) => {
-      stderr += chunk.toString();
-    });
-
-    child.on("close", (code) => {
-      fs.rmSync(tempDir, { recursive: true, force: true });
-
-      if (code === 0) {
-        resolve(destinationZip);
+    let settled = false;
+    const finalize = (error) => {
+      if (settled) {
         return;
       }
 
-      reject(new Error(stderr || `ZIP creation failed. Code: ${code}`));
-    });
+      settled = true;
 
-    child.on("error", (error) => {
-      fs.rmSync(tempDir, { recursive: true, force: true });
-      reject(error);
-    });
+      if (error) {
+        try {
+          output.destroy();
+        } catch (_destroyError) {
+          // no-op
+        }
+        reject(error);
+        return;
+      }
+
+      resolve(destinationZip);
+    };
+
+    output.on("close", () => finalize());
+    output.on("error", (error) => finalize(error));
+    zipStream.on("error", (error) => finalize(error));
+    zipStream.pipe(output);
   });
 }
 
@@ -897,6 +958,7 @@ ipcMain.handle("convert-batch", async (_event, payload) => {
 });
 
 app.whenReady().then(() => {
+  validateAppManifest();
   createTray();
   createWindow();
 

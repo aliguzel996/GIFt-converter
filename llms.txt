@@ -1,0 +1,23 @@
+# GIFt-Converter
+
+GIFt-Converter is a free open-source tool for converting batches of video files into GIFs.
+
+- Project type: hybrid desktop and web tool
+- Desktop build: Electron app for Windows
+- Web build: browser conversion with ffmpeg.wasm
+- Main repo: https://github.com/algzl/GIFt-converter
+- Website: https://ycswu.co/gift-converter/
+- Latest release API: https://api.github.com/repos/algzl/GIFt-converter/releases/latest
+
+Supported input formats include:
+MP4, MOV, MKV, AVI, WEBM, M4V, WMV, FLV, MPEG, MPG, 3GP, TS, MTS, M2TS, OGV, OGM, QT, ASF, VOB, MXF, F4V, RM, RMVB, DIVX
+
+Outputs:
+GIF, ZIP
+
+Release folders in this project:
+- GIFt-Converter/web
+- GIFt-Converter/windows app
+- GIFt-Converter/itch build
+
+The web build requires http://localhost or https:// for conversion. file:// is preview-only.

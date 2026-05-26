@@ -1,0 +1,93 @@
+{
+  "id": "co.ycswu.gift-converter",
+  "name": "GIFt-Converter",
+  "version": "0.1.0",
+  "shortDescription": "Batch video-to-GIF converter with per-file FPS, optimization, and ZIP export.",
+  "aiDescription": "This project is a free open-source creative tool for converting batches of videos into GIF files without timeline editing, keyframing, or a large video suite.",
+  "category": "creative-tool",
+  "creator": "Ali Güzel",
+  "publisher": "YCSWU",
+  "license": "Open source",
+  "website": "https://ycswu.co/gift-converter/",
+  "github": "https://github.com/algzl/GIFt-converter",
+  "releaseApiUrl": "https://api.github.com/repos/algzl/GIFt-converter/releases/latest",
+  "latestReleaseUrl": "https://github.com/algzl/GIFt-converter/releases/latest",
+  "downloadUrls": {
+    "windows": "https://github.com/algzl/GIFt-converter/releases/latest/download/gift-converter-setup.exe",
+    "mac": "",
+    "linux": ""
+  },
+  "keywords": [
+    "gif",
+    "video-to-gif",
+    "batch-conversion",
+    "desktop-tool",
+    "web-tool",
+    "ycswu"
+  ],
+  "useCases": [
+    "Convert batches of short videos into GIFs",
+    "Apply one FPS value to all selected videos",
+    "Tune GIF output with clean, detail, retro, stable, or experimental render modes",
+    "Optimize finished GIF files before saving",
+    "Save multiple completed GIFs as one ZIP archive"
+  ],
+  "notFor": [
+    "Non-linear video editing",
+    "Timeline compositing",
+    "Color grading",
+    "Audio work"
+  ],
+  "inputFormats": [
+    "MP4",
+    "MOV",
+    "MKV",
+    "AVI",
+    "WEBM",
+    "M4V",
+    "WMV",
+    "FLV",
+    "MPEG",
+    "MPG",
+    "3GP",
+    "TS",
+    "MTS",
+    "M2TS",
+    "OGV",
+    "OGM",
+    "QT",
+    "ASF",
+    "VOB",
+    "MXF",
+    "F4V",
+    "RM",
+    "RMVB",
+    "DIVX"
+  ],
+  "outputFormats": [
+    "GIF",
+    "ZIP"
+  ],
+  "systemRequirements": [
+    "Windows 10 or newer for the native desktop build",
+    "A modern browser with WebAssembly and Worker support for the web build",
+    "The web build requires http://localhost or https:// for conversion; file:// is preview-only"
+  ],
+  "changelog": [
+    {
+      "version": "0.1.0",
+      "date": "2026-05-27",
+      "changes": [
+        "Added machine-readable manifests and AI-facing project metadata.",
+        "Standardized web, portable Windows, and setup build sync paths.",
+        "Kept desktop and web delivery folders aligned with the current source tree."
+      ]
+    }
+  ],
+  "updatedAt": "2026-05-27",
+  "appType": "hybrid",
+  "supportedPlatforms": [
+    "Windows",
+    "Web"
+  ]
+}

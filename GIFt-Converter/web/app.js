@@ -601,7 +601,7 @@ async function downloadOutputs() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "gift-converter-web-export.zip";
+  link.download = "gift-converter-export.zip";
   link.click();
   URL.revokeObjectURL(url);
   setStatus("ZIP downloaded.", "ready");

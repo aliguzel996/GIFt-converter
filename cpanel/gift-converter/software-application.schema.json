@@ -1,0 +1,25 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "GIFt-Converter",
+  "description": "Batch video-to-GIF converter with per-file FPS, optimization, and ZIP export.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Windows, Web Browser",
+  "creator": {
+    "@type": "Person",
+    "name": "Ali Güzel"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YCSWU"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareVersion": "0.1.0",
+  "url": "https://ycswu.co/gift-converter/",
+  "downloadUrl": "https://github.com/algzl/GIFt-converter/releases/latest/download/gift-converter-setup.exe",
+  "codeRepository": "https://github.com/algzl/GIFt-converter"
+}
