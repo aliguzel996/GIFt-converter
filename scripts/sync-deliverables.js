@@ -18,7 +18,13 @@ const paths = {
   setupDest: path.join(projectRoot, "GIFt-Converter", "itch build", "gift-converter-setup.exe"),
   schemaSource: path.join(projectRoot, "metadata", "schema", "software-application.schema.json"),
   webSchemaDest: path.join(projectRoot, "cpanel", "gift-converter", "software-application.schema.json"),
-  webSchemaMirror: path.join(projectRoot, "GIFt-Converter", "web", "software-application.schema.json")
+  webSchemaMirror: path.join(projectRoot, "GIFt-Converter", "web", "software-application.schema.json"),
+  logoSvgSource: path.join(projectRoot, "assets", "GIFt-Converterlogos.svg"),
+  logoPngSource: path.join(projectRoot, "assets", "icon.png"),
+  webLogoSvgDest: path.join(projectRoot, "cpanel", "gift-converter", "GIFt-Converterlogos.svg"),
+  webLogoPngDest: path.join(projectRoot, "cpanel", "gift-converter", "icon.png"),
+  webLogoSvgMirror: path.join(projectRoot, "GIFt-Converter", "web", "GIFt-Converterlogos.svg"),
+  webLogoPngMirror: path.join(projectRoot, "GIFt-Converter", "web", "icon.png")
 };
 
 function ensureDir(dirPath) {
@@ -48,12 +54,16 @@ function copyFile(sourceFile, destFile) {
 
 function syncMetadata() {
   copyFile(paths.schemaSource, paths.webSchemaDest);
+  copyFile(paths.logoSvgSource, paths.webLogoSvgDest);
+  copyFile(paths.logoPngSource, paths.webLogoPngDest);
 }
 
 function syncWeb() {
   syncMetadata();
   copyDir(paths.webSource, paths.webDest);
   copyFile(paths.schemaSource, paths.webSchemaMirror);
+  copyFile(paths.logoSvgSource, paths.webLogoSvgMirror);
+  copyFile(paths.logoPngSource, paths.webLogoPngMirror);
 }
 
 function syncPortable() {

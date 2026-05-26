@@ -101,16 +101,11 @@ function getFfmpegExecutablePath() {
 }
 
 function createTrayIcon() {
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-      <rect x="1" y="1" width="14" height="14" fill="#111111"/>
-      <path d="M4 4.2h5.2v1.6H5.6v1.5h3v1.6h-3v3.1H4z" fill="#f7f7f2"/>
-      <path d="M12.8 6.4h-1.9V4.6h-1.4v1.8H7.7v1.4h1.8v1.8h1.4V7.8h1.9z" fill="#f7f7f2"/>
-    </svg>
-  `;
-  return nativeImage.createFromDataURL(
-    `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`
-  );
+  return nativeImage.createFromPath(getAppIconPath()).resize({
+    width: 16,
+    height: 16,
+    quality: "best"
+  });
 }
 
 function showMainWindow() {

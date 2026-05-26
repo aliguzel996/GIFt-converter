@@ -5,7 +5,7 @@ const pngToIcoModule = require("png-to-ico");
 const pngToIco = pngToIcoModule.default || pngToIcoModule;
 
 const projectRoot = path.resolve(__dirname, "..");
-const sourcePng = path.join(projectRoot, "assets", "GIFt-Converterlogos.png");
+const sourceSvg = path.join(projectRoot, "assets", "GIFt-Converterlogos.svg");
 const outputPng = path.join(projectRoot, "assets", "icon.png");
 const outputIco = path.join(projectRoot, "assets", "icon.ico");
 const tempDir = path.join(projectRoot, "tmp", "icon-build");
@@ -17,13 +17,13 @@ async function ensureDir(dirPath) {
 }
 
 async function main() {
-  if (!fs.existsSync(sourcePng)) {
-    throw new Error(`Source icon not found: ${sourcePng}`);
+  if (!fs.existsSync(sourceSvg)) {
+    throw new Error(`Source icon not found: ${sourceSvg}`);
   }
 
   await ensureDir(tempDir);
 
-  await sharp(sourcePng)
+  await sharp(sourceSvg, { density: 144, limitInputPixels: false })
     .resize(512, 512, {
       fit: "contain",
       background: { r: 255, g: 255, b: 255, alpha: 0 }
@@ -35,7 +35,7 @@ async function main() {
 
   for (const size of sizes) {
     const filePath = path.join(tempDir, `icon-${size}.png`);
-    await sharp(sourcePng)
+    await sharp(sourceSvg, { density: 144, limitInputPixels: false })
       .resize(size, size, {
         fit: "contain",
         background: { r: 255, g: 255, b: 255, alpha: 0 }
