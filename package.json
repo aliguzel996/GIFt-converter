@@ -40,7 +40,7 @@
     "artifactName": "gift-converter-${version}.${ext}",
     "win": {
       "icon": "assets/icon.ico",
-      "signAndEditExecutable": false,
+      "signAndEditExecutable": true,
       "target": [
         {
           "target": "portable",
